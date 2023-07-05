@@ -1,0 +1,52 @@
+extends ../layout.pug
+block content
+    .container 
+    h1 Listes des sorts     
+    if spells.length > 0
+        table.table.table-striped.table-hover
+            tr
+                th nom
+                th description 
+                th type
+                th valeur 
+                th porter
+                th action
+            each spell in spells 
+                tr(data-id=`${spell._id}`)
+                    td #{spell.name}
+                    td #{spell.description} 
+                    td #{spell.type}
+                    td de #{spell.value.min} à #{spell.value.max} #{spell.value.unit}
+                    td de #{spell.range.min} à #{spell.range.max} mètres
+                    td
+                        button.btn.btn-primary.edit Edit 
+                        button.btn.btn-error.delete Delete
+    else 
+        p aucun sort disponible
+    
+    a.btn(href="/api/spells/create") Ajouter
+
+    script.
+        const edit_buttons = document.querySelectorAll(".edit")
+        const delete_buttons = document.querySelectorAll(".delete")
+
+
+        edit_buttons.forEach(edit_button =>{
+            edit_button.addEventListener("click", ()=> {
+                window.location.href = `/api/spells/${event.target.parentNode.parentNode.dataset.id}`;
+            })
+        })
+        delete_buttons.forEach(delete_button =>{
+            delete_button.addEventListener("click", (event)=> {
+                fetch(`/api/spells/${event.target.parentNode.parentNode.dataset.id}`,{method: 'DELETE'})
+                    .then(response => response.json())
+                    .then(data=>{
+                        if (data.msg == "Spell delete"){
+                            //- event.target.parentNode.parentNode.remove()
+                            window.location.reload()
+                        }
+                    });
+            })
+        })
+      
+        

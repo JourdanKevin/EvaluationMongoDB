@@ -1,0 +1,14 @@
+extends ../layout.pug
+block content 
+  h1 Créer un nouveau sort
+    form(action="/api/spells/create" method="POST")
+        div.form-group
+            input.form-input(type="text", name="name" placeholder="nom") 
+            textarea.form-input(type="text", name="description" placeholder="description") 
+            input.form-input(type="text", name="type" placeholder="type") 
+            input.form-input(type="text", name="value.min" placeholder="valeur minimum") 
+            input.form-input(type="text", name="value.max" placeholder="valeur maximum")
+            input.form-input(type="text", name="value.unit" placeholder="uniter de la valeur") 
+            input.form-input(type="text", name="range.min" placeholder="porter minimum") 
+            input.form-input(type="text", name="range.max" placeholder="porter maximum") 
+            button.btn.btn-primary(type="submit") Créer

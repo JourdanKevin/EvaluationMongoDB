@@ -1,0 +1,47 @@
+extends ../layout.pug
+block content 
+    h1 Voir et éditer un sort
+    form(action=`/api/spells/${spell._id}` method="PUT")
+        input.form-input(type="text", name="name" placeholder="nom" value=spell.name) 
+        textarea.form-input(type="text", name="description" placeholder="description")=spell.description
+        input.form-input(type="text", name="type" placeholder="type" value=`${spell.type}`) 
+        input.form-input(type="text", name="value.min" placeholder="valeur minimum" value=spell.value.min) 
+        input.form-input(type="text", name="value.max" placeholder="valeur maximum" value=spell.value.max) 
+        input.form-input(type="text", name="value.unit" placeholder="uniter de la valeur") 
+        input.form-input(type="text", name="range.min" placeholder="porter minimum" value=spell.range.min) 
+        input.form-input(type="text", name="range.max" placeholder="porte maximum"  value=spell.range.max) 
+        button.btn.btn-primary(type="submit") Enregistrer
+
+    script.
+        const form = document.querySelector('form');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const spellId = form.getAttribute('action').split('/').pop();
+            const formData = new FormData(form);
+            const convertedData = {};
+            for (const [key, value] of formData.entries()) {
+                if (key.includes('.')) {
+                    const [obj, prop] = key.split('.');
+                    convertedData[obj] = convertedData[obj] || {};
+                    convertedData[obj][prop] = value;
+                } else {
+                    convertedData[key] = value;
+                }
+            }
+            try {
+                const response = await fetch(`/api/spells/${spellId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(convertedData)
+                });
+                if (response.ok) {
+                    alert('Sort mis à jour avec succès !');
+                } else {
+                    console.error('Une erreur s\'est produite lors de la mise à jour du sort.');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la requête:', error);
+            }
+        });
