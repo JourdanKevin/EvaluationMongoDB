@@ -19,8 +19,8 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.get("/", (req, res) => {
-  res.json(`Bienvenue sur l'API REST de gestion de spell`);
+app.get(["/", "/api"], (req, res) => {
+  res.json("Bienvenue sur l'API REST de gestion de spell, continuez sur la route /api/spells");
 });
 app.use("/api/spells", require("./routes/spellRoutes"));
 app.listen(port, () =>
